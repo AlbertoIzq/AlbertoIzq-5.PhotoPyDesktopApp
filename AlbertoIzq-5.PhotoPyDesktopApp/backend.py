@@ -1,4 +1,4 @@
-import cv2
+import cv2, numpy
 
 img = cv2.imread('Demon mask.jpg', 1)
 
@@ -6,21 +6,37 @@ print(img)
 print(img.shape) # number of pixels
 print(img.ndim) # number of dimensions
 
-def RotateRight(img):
+# Orientation
+def rotateRight(img):
     return cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
 
-def RotateLeft(img):
+def rotateLeft(img):
     return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
 
-def FlipVertical(img):
+def flipVertical(img):
     return cv2.flip(img, 0)
 
-def FlipHorizontal(img):
+def flipHorizontal(img):
     return cv2.flip(img, 1)
 
-img = FlipHorizontal(img)
+def invertAll(img):
+    return cv2.bitwise_not(img)
 
-resized_img = cv2.resize(img, (int(img.shape[1]/4), int(img.shape[0]/4)))
+
+# Remove color
+def removeBlueChannel(img):
+    img[:,:,0] = numpy.zeros([img.shape[0], img.shape[1]])
+    return img
+
+def removeGreenChannel(img):
+    img[:,:,1] = numpy.zeros([img.shape[0], img.shape[1]])
+    return img
+
+def removeRedChannel(img):
+    img[:,:,2] = numpy.zeros([img.shape[0], img.shape[1]])
+    return img
+
+
 
 cv2.imshow("Image", resized_img)
 cv2.waitKey(0)
