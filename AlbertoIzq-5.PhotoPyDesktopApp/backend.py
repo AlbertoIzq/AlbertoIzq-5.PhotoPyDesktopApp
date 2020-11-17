@@ -1,6 +1,6 @@
 import cv2, numpy
 
-img = cv2.imread('Demon mask.jpg', 1)
+img = cv2.imread('Demon mask.jpg', cv2.IMREAD_UNCHANGED)
 
 print(img)
 print(img.shape) # number of pixels
@@ -22,21 +22,36 @@ def flipHorizontal(img):
 
 # Remove color
 def removeBlueChannel(img):
-    img[:,:,0] = numpy.zeros([img.shape[0], img.shape[1]])
+    img[:,:,0] = 0 #numpy.zeros([img.shape[0], img.shape[1]])
     return img
 
 def removeGreenChannel(img):
-    img[:,:,1] = numpy.zeros([img.shape[0], img.shape[1]])
+    img[:,:,1] = 0
     return img
 
 def removeRedChannel(img):
-    img[:,:,2] = numpy.zeros([img.shape[0], img.shape[1]])
+    img[:,:,2] = 0
     return img
 
 
-# Other color
-def invertAll(img):
-    return cv2.bitwise_not(img)
+# Extract color
+def extractBlueChannel(img):
+    img[:, :, 1] = 0
+    img[:, :, 2] = 0
+    return img
+
+def extractGreenChannel(img):
+    img[:, :, 0] = 0
+    img[:, :, 2] = 0
+    return img
+
+def extractRedChannel(img):
+    img[:, :, 0] = 0
+    img[:, :, 1] = 0
+    return img
+
+
+
 
 
 # Resize
@@ -58,11 +73,10 @@ def resizeRatioHeight(img, height):
 def resizeWidthHeight(img, width, height):
     return cv2.resize(img, (width, height))
 
+img = resizeRatioPercent(img, 25)
+#modified_img = img
+modified_img = invertRedChannel(img)
 
-img = invertAll(img)
-print(img.shape)
-resized_img = resizeRatioHeight(img, 720)
-
-cv2.imshow("Image", resized_img)
+cv2.imshow("Image", modified_img)
 cv2.waitKey(0)
 cv2.destroyAllWindows() # Method to close the window
