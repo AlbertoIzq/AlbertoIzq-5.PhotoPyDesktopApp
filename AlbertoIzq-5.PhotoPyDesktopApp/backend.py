@@ -19,9 +19,6 @@ def flipVertical(img):
 def flipHorizontal(img):
     return cv2.flip(img, 1)
 
-def invertAll(img):
-    return cv2.bitwise_not(img)
-
 
 # Remove color
 def removeBlueChannel(img):
@@ -37,6 +34,34 @@ def removeRedChannel(img):
     return img
 
 
+# Other color
+def invertAll(img):
+    return cv2.bitwise_not(img)
+
+
+# Resize
+def resizeRatioPercent(img, scale_percent):
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    return cv2.resize(img, (width, height))
+
+def resizeRatioWidth(img, width):
+    height = int( width * img.shape[0] / img.shape[1])
+    print(height)
+    return cv2.resize(img, (width, height))
+
+def resizeRatioHeight(img, height):
+    width = int(height * img.shape[1] / img.shape[0])
+    print(width)
+    return cv2.resize(img, (width, height))
+
+def resizeWidthHeight(img, width, height):
+    return cv2.resize(img, (width, height))
+
+
+img = invertAll(img)
+print(img.shape)
+resized_img = resizeRatioHeight(img, 720)
 
 cv2.imshow("Image", resized_img)
 cv2.waitKey(0)
