@@ -51,7 +51,21 @@ def extractRedChannel(img):
     return img
 
 
+# Invert color
+def invertAll(img):
+    return cv2.bitwise_not(img)
 
+def invertBlueChannel(img):
+    img[:, :, 0] = 255 - img[:, :, 0] #~img[:, :, 1]
+    return img
+
+def invertGreenChannel(img):
+    img[:, :, 1] = 255 - img[:, :, 1]
+    return img
+
+def invertRedChannel(img):
+    img[:, :, 2] = 255 - img[:, :, 2]
+    return img
 
 
 # Resize
@@ -73,8 +87,8 @@ def resizeRatioHeight(img, height):
 def resizeWidthHeight(img, width, height):
     return cv2.resize(img, (width, height))
 
+
 img = resizeRatioPercent(img, 25)
-#modified_img = img
 modified_img = invertRedChannel(img)
 
 cv2.imshow("Image", modified_img)
