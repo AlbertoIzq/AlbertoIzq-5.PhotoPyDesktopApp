@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c8665df5-3954-4cf9-8b73-541452b3eb1c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>backend.py</StartupFile>
+    <StartupFile>frontend.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="backend.py" />
+    <Compile Include="frontend.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
