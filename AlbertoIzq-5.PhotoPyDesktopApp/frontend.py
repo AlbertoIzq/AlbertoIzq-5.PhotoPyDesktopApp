@@ -82,8 +82,8 @@ class Window(object):
         self.window = window
         self.window.title("PhotoPy by Alberto Izquierdo")
 
-        # Input file
-        l1 = Label(window, text = "Input file")
+        # INPUT FILE
+        l1 = Label(window, text = "INPUT FILE")
         l1.grid(row = 0, column = 0, columnspan = 2)
 
         l2 = Label(window, text = "Path")
@@ -103,8 +103,8 @@ class Window(object):
         b1 = Button(window, text = "Load")
         b1.grid(row = 2, column = 2)
 
-        # Output file
-        l4 = Label(window, text = "Output file")
+        # OUTPUT FILE
+        l4 = Label(window, text = "OUTPUT FILE")
         l4.grid(row = 3, column = 0, columnspan = 2)
 
         l5 = Label(window, text = "Path")
@@ -124,55 +124,91 @@ class Window(object):
         b2 = Button(window, text = "Save")
         b2.grid(row = 5, column = 2)
 
-        # Edit image
+        # MESSAGE
+        l7 = Label(window, text = "MESSAGE:")
+        l7.grid(row = 6, column = 0, columnspan = 2)
+
+        # EDIT IMAGE
+        l8 = Label(window, text = "EFFECTS")
+        l8.grid(row = 0, column = 3, columnspan = 2)
+
         self.change_orientation = StringVar()
         self.o1 = OptionMenu(window, self.change_orientation, *CHANGE_ORIENTATION)
         self.o1.configure(width = (MAX_LISTS_len))
-        self.o1.grid(row = 0, column = 3)
+        self.o1.grid(row = 1, column = 3)
 
         self.resize_image = StringVar()
         self.o2 = OptionMenu(window, self.resize_image, *RESIZE_IMAGE)
         self.o2.configure(width = (MAX_LISTS_len))
-        self.o2.grid(row = 1, column = 3)
+        self.o2.grid(row = 2, column = 3)
 
         self.remove_color = StringVar()
         self.o3 = OptionMenu(window, self.remove_color, *REMOVE_COLOR)
         self.o3.configure(width = (MAX_LISTS_len))
-        self.o3.grid(row = 2, column = 3)
+        self.o3.grid(row = 3, column = 3)
 
         self.extract_color = StringVar()
         self.o4 = OptionMenu(window, self.extract_color, *EXTRACT_COLOR)
         self.o4.configure(width = (MAX_LISTS_len))
-        self.o4.grid(row = 3, column = 3)
+        self.o4.grid(row = 4, column = 3)
 
         self.invert_color = StringVar()
         self.o5 = OptionMenu(window, self.invert_color, *INVERT_COLOR)
         self.o5.configure(width = (MAX_LISTS_len))
-        self.o5.grid(row = 4, column = 3)
+        self.o5.grid(row = 5, column = 3)
 
         self.apply_effect = StringVar()
         self.o6 = OptionMenu(window, self.apply_effect, *APPLY_EFFECT)
         self.o6.configure(width = (MAX_LISTS_len))
-        self.o6.grid(row = 5, column = 3)
+        self.o6.grid(row = 6, column = 3)
 
         b3 = Button(window, text = "Change orientation", width = BUTTON_NAMES_len)
-        b3.grid(row = 0, column = 4)
+        b3.grid(row = 1, column = 4)
 
         b4 = Button(window, text = "Resize image", width = BUTTON_NAMES_len)
-        b4.grid(row = 1, column = 4)
+        b4.grid(row = 2, column = 4)
 
         b5 = Button(window, text = "Remove color", width = BUTTON_NAMES_len)
-        b5.grid(row = 2, column = 4)
+        b5.grid(row = 3, column = 4)
 
         b6 = Button(window, text = "Extract color", width = BUTTON_NAMES_len)
-        b6.grid(row = 3, column = 4)
+        b6.grid(row = 4, column = 4)
 
         b7 = Button(window, text = "Invert color", width = BUTTON_NAMES_len)
-        b7.grid(row = 4, column = 4)
+        b7.grid(row = 5, column = 4)
 
         b8 = Button(window, text = "Apply effect", width = BUTTON_NAMES_len)
-        b8.grid(row = 5, column = 4)
+        b8.grid(row = 6, column = 4)
 
+        # PARAMETERS
+        l9 = Label(window, text = "Percentage (%)")
+        l9.grid(row = 1, column = 5)
+
+        l10 = Label(window, text = "Width (pixels)")
+        l10.grid(row = 2, column = 5)
+
+        l11 = Label(window, text = "Height (pixels)")
+        l11.grid(row = 3, column = 5)
+
+        l12 = Label(window, text = "k")
+        l12.grid(row = 6, column = 5)
+
+        self.percentage = StringVar()
+        self.e5 = Entry(window, textvariable = self.percentage, width = 6)
+        self.e5.grid(row = 1, column = 6)
+
+        self.width = StringVar()
+        self.e5 = Entry(window, textvariable = self.width, width = 6)
+        self.e5.grid(row = 2, column = 6)
+
+        self.height = StringVar()
+        self.e5 = Entry(window, textvariable = self.height, width = 6)
+        self.e5.grid(row = 3, column = 6)
+
+        self.k = StringVar()
+        self.e5 = Entry(window, textvariable = self.k, width = 6)
+        self.e5.grid(row = 6, column = 6)
+        
 
 
 window = Tk()
