@@ -16,45 +16,45 @@ CHANGE_ORIENTATION = [
 CHANGE_ORIENTATION_len = getListMaxLen(CHANGE_ORIENTATION)
 
 RESIZE_IMAGE = [
-"Resize ratio percent",
-"Resize ratio by width",
-"Resize ratio by height",
-"Resize width & height"
+"Ratio percent",
+"Ratio by width",
+"Ratio by height",
+"Width & height"
 ]
 RESIZE_IMAGE_len = getListMaxLen(RESIZE_IMAGE)
 
 REMOVE_COLOR = [
-"Remove blue",
-"Remove green",
-"Remove red"
+"Blue",
+"Green",
+"Red"
 ]
 REMOVE_COLOR_len = getListMaxLen(REMOVE_COLOR)
 
 EXTRACT_COLOR = [
-"Extract blue",
-"Extract green",
-"Extract red"
+"Blue",
+"Green",
+"Red"
 ]
 EXTRACT_COLOR_len = getListMaxLen(EXTRACT_COLOR)
 
 INVERT_COLOR = [
-"Invert all",
-"Invert blue",
-"Invert green",
-"Invert red"
+"All",
+"Blue",
+"Green",
+"Red"
 ]
 INVERT_COLOR_len = getListMaxLen(INVERT_COLOR)
 
 APPLY_EFFECT = [
-"Apply gray effect",
-"Apply blur effect",
-"Apply pencil sketch effect",
-"Apply charcoal effect",
-"Apply sharpen effect",
-"Apply sepia effect",
-"Apply emboss effect",
-"Apply edge effect",
-"Apply pixel effect"
+"Gray effect",
+"Blur effect",
+"Pencil sketch effect",
+"Charcoal effect",
+"Sharpen effect",
+"Sepia effect",
+"Emboss effect",
+"Edge effect",
+"Pixel effect"
 ]
 APPLY_EFFECT_len = getListMaxLen(APPLY_EFFECT)
 
@@ -64,6 +64,17 @@ MAX_LISTS_len = max([CHANGE_ORIENTATION_len,
                      EXTRACT_COLOR_len,
                      INVERT_COLOR_len,
                      APPLY_EFFECT_len])
+
+BUTTON_NAMES = [
+"Change orientation",
+"Resize image",
+"Remove color",
+"Extract color",
+"Invert color",
+"Apply effect"
+]
+BUTTON_NAMES_len = getListMaxLen(BUTTON_NAMES)
+
 class Window(object):
     """Class to store window object"""
 
@@ -143,6 +154,26 @@ class Window(object):
         self.o6 = OptionMenu(window, self.apply_effect, *APPLY_EFFECT)
         self.o6.configure(width = (MAX_LISTS_len))
         self.o6.grid(row = 5, column = 3)
+
+        b3 = Button(window, text = "Change orientation", width = BUTTON_NAMES_len)
+        b3.grid(row = 0, column = 4)
+
+        b4 = Button(window, text = "Resize image", width = BUTTON_NAMES_len)
+        b4.grid(row = 1, column = 4)
+
+        b5 = Button(window, text = "Remove color", width = BUTTON_NAMES_len)
+        b5.grid(row = 2, column = 4)
+
+        b6 = Button(window, text = "Extract color", width = BUTTON_NAMES_len)
+        b6.grid(row = 3, column = 4)
+
+        b7 = Button(window, text = "Invert color", width = BUTTON_NAMES_len)
+        b7.grid(row = 4, column = 4)
+
+        b8 = Button(window, text = "Apply effect", width = BUTTON_NAMES_len)
+        b8.grid(row = 5, column = 4)
+
+
 
 window = Tk()
 Window(window)
