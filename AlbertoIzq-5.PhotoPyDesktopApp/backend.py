@@ -2,11 +2,6 @@ import cv2, numpy
 
 img = cv2.imread('Demon mask.jpg', cv2.IMREAD_UNCHANGED)
 
-print(img)
-print(img.shape) # number of pixels
-print(img.ndim) # number of dimensions
-
-
 # Orientation
 def rotateRight(img):
     return cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)

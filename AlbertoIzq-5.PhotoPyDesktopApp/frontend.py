@@ -1,4 +1,6 @@
 from tkinter import *
+import backend
+import cv2, numpy, os
 
 def getListMaxLen(lst):
     ln = 0
@@ -75,6 +77,9 @@ BUTTON_NAMES = [
 ]
 BUTTON_NAMES_len = getListMaxLen(BUTTON_NAMES)
 
+entry_files_len = 60
+entry_parameters_len = 6
+
 class Window(object):
     """Class to store window object"""
 
@@ -93,14 +98,14 @@ class Window(object):
         l3.grid(row = 2, column = 0)
 
         self.input_path = StringVar()
-        self.e1 = Entry(window, textvariable = self.input_path, width = 60)
+        self.e1 = Entry(window, textvariable = self.input_path, width = entry_files_len)
         self.e1.grid(row = 1, column = 1)
 
         self.input_file_name = StringVar()
-        self.e2 = Entry(window, textvariable = self.input_file_name, width = 60)
+        self.e2 = Entry(window, textvariable = self.input_file_name, width = entry_files_len)
         self.e2.grid(row = 2, column = 1)
 
-        b1 = Button(window, text = "Load")
+        b1 = Button(window, text = "Load", command = self.load_command)
         b1.grid(row = 2, column = 2)
 
         # OUTPUT FILE
@@ -114,18 +119,20 @@ class Window(object):
         l6.grid(row = 5, column = 0)
 
         self.output_path = StringVar()
-        self.e3 = Entry(window, textvariable = self.output_path, width = 60)
+        self.e3 = Entry(window, textvariable = self.output_path, width = entry_files_len)
         self.e3.grid(row = 4, column = 1)
 
         self.output_file_name = StringVar()
-        self.e4 = Entry(window, textvariable = self.output_file_name, width = 60)
+        self.e4 = Entry(window, textvariable = self.output_file_name, width = entry_files_len)
         self.e4.grid(row = 5, column = 1)
 
-        b2 = Button(window, text = "Save")
+        b2 = Button(window, text = "Save", command = self.save_command)
         b2.grid(row = 5, column = 2)
 
         # MESSAGE
-        l7 = Label(window, text = "MESSAGE:")
+        self.message = StringVar()
+        self.message_back_color = None
+        l7 = Label(window, textvariable = self.message, background = self.message_back_color)
         l7.grid(row = 6, column = 0, columnspan = 2)
 
         # EDIT IMAGE
@@ -194,23 +201,43 @@ class Window(object):
         l12.grid(row = 6, column = 5)
 
         self.percentage = StringVar()
-        self.e5 = Entry(window, textvariable = self.percentage, width = 6)
+        self.e5 = Entry(window, textvariable = self.percentage, width = entry_parameters_len)
         self.e5.grid(row = 1, column = 6)
 
         self.width = StringVar()
-        self.e5 = Entry(window, textvariable = self.width, width = 6)
+        self.e5 = Entry(window, textvariable = self.width, width = entry_parameters_len)
         self.e5.grid(row = 2, column = 6)
 
         self.height = StringVar()
-        self.e5 = Entry(window, textvariable = self.height, width = 6)
+        self.e5 = Entry(window, textvariable = self.height, width = entry_parameters_len)
         self.e5.grid(row = 3, column = 6)
 
         self.k = StringVar()
-        self.e5 = Entry(window, textvariable = self.k, width = 6)
+        self.e5 = Entry(window, textvariable = self.k, width = entry_parameters_len)
         self.e5.grid(row = 6, column = 6)
-        
 
+        # Image initialization
+        self.img = None
 
+    def load_command(self):
+        self.img = cv2.imread(os.path.join(self.input_path.get(), self.input_file_name.get()), cv2.IMREAD_UNCHANGED)
+        if self.img is not None:
+            self.message.set('Image loaded correctly!')
+            self.message_back_color = 'green'
+        else:
+            self.message.set('Image could not be loaded. Check path and file name (with extension)')
+            self.message_back_color = 'red'
+
+    def save_command(self):
+        if self.img is not None:
+            try:
+                cv2.imwrite(os.path.join(self.output_path.get(), self.output_file_name.get()), self.img)
+                self.message.set('Image saved successfully!')
+                self.message_back_color = 'green'
+            except:
+                self.message.set('Image could not be saved. Check path and file name (with extension)')
+                self.message_back_color = 'red'
+               
 window = Tk()
 Window(window)
 window.mainloop()
