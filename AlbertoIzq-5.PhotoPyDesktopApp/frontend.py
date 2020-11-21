@@ -1,5 +1,5 @@
 from tkinter import *
-import backend
+from backend import *
 import cv2, numpy, os
 
 def getListMaxLen(lst):
@@ -169,22 +169,22 @@ class Window(object):
         self.o6.configure(width = (MAX_LISTS_len))
         self.o6.grid(row = 6, column = 3)
 
-        b3 = Button(window, text = "Change orientation", width = BUTTON_NAMES_len)
+        b3 = Button(window, text = "Change orientation", command = self.change_orientation_command, width = BUTTON_NAMES_len)
         b3.grid(row = 1, column = 4)
 
-        b4 = Button(window, text = "Resize image", width = BUTTON_NAMES_len)
+        b4 = Button(window, text = "Resize image", command = self.resize_image_orientation_command, width = BUTTON_NAMES_len)
         b4.grid(row = 2, column = 4)
 
-        b5 = Button(window, text = "Remove color", width = BUTTON_NAMES_len)
+        b5 = Button(window, text = "Remove color", command = self.remove_color_command, width = BUTTON_NAMES_len)
         b5.grid(row = 3, column = 4)
 
-        b6 = Button(window, text = "Extract color", width = BUTTON_NAMES_len)
+        b6 = Button(window, text = "Extract color", command = self.extract_color_command, width = BUTTON_NAMES_len)
         b6.grid(row = 4, column = 4)
 
-        b7 = Button(window, text = "Invert color", width = BUTTON_NAMES_len)
+        b7 = Button(window, text = "Invert color", command = self.invert_color_command, width = BUTTON_NAMES_len)
         b7.grid(row = 5, column = 4)
 
-        b8 = Button(window, text = "Apply effect", width = BUTTON_NAMES_len)
+        b8 = Button(window, text = "Apply effect", command = self.apply_effect_command, width = BUTTON_NAMES_len)
         b8.grid(row = 6, column = 4)
 
         # PARAMETERS
@@ -238,6 +238,33 @@ class Window(object):
                 self.message.set('Image could not be saved. Check path and file name (with extension)')
                 self.message_back_color = 'red'
                
+    def change_orientation_command(self):
+        if self.img is not None:
+            if self.change_orientation.get() == "Rotate left":
+                self.img = rotateLeft(self.img)
+            elif self.change_orientation.get() == "Rotate right":
+                self.img = rotateRight(self.img)
+            elif self.change_orientation.get() == "Flip vertical":
+                self.img = flipVertical(self.img)
+            elif self.change_orientation.get() == "Flip horizontal":
+                self.img = flipHorizontal(self.img)
+
+
+    def resize_image_orientation_command(self):
+        pass
+
+    def remove_color_command(self):
+        pass
+
+    def extract_color_command(self):
+        pass
+
+    def invert_color_command(self):
+        pass
+
+    def apply_effect_command(self):
+        pass
+
 window = Tk()
 Window(window)
 window.mainloop()
