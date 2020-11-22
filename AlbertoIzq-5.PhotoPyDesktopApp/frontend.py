@@ -373,7 +373,21 @@ class Window(object):
                     #self.message_back_color = 'red'
 
     def remove_color_command(self):
-        pass
+        if self.img is not None:
+            if self.remove_color.get() == "Blue":
+                self.img = removeBlueChannel(self.img)
+                self.message.set('Remove ' + self.remove_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.remove_color.get() == "Green":
+                self.img = removeGreenChannel(self.img)
+                self.message.set('Remove ' + self.remove_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.remove_color.get() == "Red":
+                self.img = removeRedChannel(self.img)
+                self.message.set('Remove ' + self.remove_color.get() + ' done!')
+                #self.message_back_color = 'green'
 
     def extract_color_command(self):
         pass
