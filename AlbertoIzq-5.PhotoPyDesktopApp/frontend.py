@@ -85,6 +85,10 @@ PERCENTAGE_MIN = 1.0
 PERCENTAGE_MAX = 1000.0
 WIDTH_MULTIPLIER = 10
 HEIGHT_MULTIPLIER = 10
+K_BLUR_DIVIDER = 5
+K_PENCIL_DIVIDER = 2.5
+K_EDGE_MIN = 3.8
+K_EDGE_MAX = 4.4
 
 class Window(object):
     """Class to store window object"""
@@ -211,16 +215,16 @@ class Window(object):
         self.e5.grid(row = 1, column = 6)
 
         self.width = StringVar()
-        self.e5 = Entry(window, textvariable = self.width, width = entry_parameters_len)
-        self.e5.grid(row = 2, column = 6)
+        self.e6 = Entry(window, textvariable = self.width, width = entry_parameters_len)
+        self.e6.grid(row = 2, column = 6)
 
         self.height = StringVar()
-        self.e5 = Entry(window, textvariable = self.height, width = entry_parameters_len)
-        self.e5.grid(row = 3, column = 6)
+        self.e7 = Entry(window, textvariable = self.height, width = entry_parameters_len)
+        self.e7.grid(row = 3, column = 6)
 
         self.k = StringVar()
-        self.e5 = Entry(window, textvariable = self.k, width = entry_parameters_len)
-        self.e5.grid(row = 6, column = 6)
+        self.e8 = Entry(window, textvariable = self.k, width = entry_parameters_len)
+        self.e8.grid(row = 6, column = 6)
 
         # Image initialization
         self.img = None
@@ -429,7 +433,136 @@ class Window(object):
                 #self.message_back_color = 'green'
 
     def apply_effect_command(self):
-        pass
+        if self.img is not None:
+            if self.apply_effect.get() == "Gray effect":
+                if len(self.img.shape) > 2: # You can only apply gray effect once because when it's applied, you only have one channel
+                    self.img = effectGray(self.img)
+                    self.message.set(self.apply_effect.get() + ' done!')
+                    #self.message_back_color = 'green'
+                else:
+                    self.message.set(self.apply_effect.get() + ' cannot be applied')
+                    #self.message_back_color = 'red'
+
+            elif self.apply_effect.get() == "Blur effect":
+                try:
+                    self.k_value = int(self.k.get())
+                    self.K_MIN = 1
+                    self.K_MAX = int(min([self.img.shape[1], self.img.shape[0]]) / K_BLUR_DIVIDER)
+
+                    if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
+                        self.img = effectBlur(self.img, self.k_value)
+                        self.message.set(self.apply_effect.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+
+            elif self.apply_effect.get() == "Pencil sketch effect":
+                try:
+                    self.k_value = int(self.k.get())
+                    self.K_MIN = 1
+                    self.K_MAX = int(min([self.img.shape[1], self.img.shape[0]]) / K_PENCIL_DIVIDER)
+
+                    if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
+                        if len(self.img.shape) > 2: # You can only apply gray effect once
+                            self.img = effectPencilSketch(self.img, self.k_value)
+                            self.message.set(self.apply_effect.get() + ' done!')
+                            #self.message_back_color = 'green'
+                        else:
+                            self.message.set(self.apply_effect.get() + ' cannot be applied')
+                            #self.message_back_color = 'red'
+                    else:
+                        self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+
+            elif self.apply_effect.get() == "Charcoal effect":
+                try:
+                    self.k_value = int(self.k.get())
+                    self.K_MIN = 1
+                    self.K_MAX = int(min([self.img.shape[1], self.img.shape[0]]) / K_BLUR_DIVIDER)
+
+                    if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
+                        if len(self.img.shape) > 2: # You can only apply gray effect once
+                            self.img = effectCharcoal(self.img, self.k_value)
+                            self.message.set(self.apply_effect.get() + ' done!')
+                            #self.message_back_color = 'green'
+                        else:
+                            self.message.set(self.apply_effect.get() + ' cannot be applied')
+                            #self.message_back_color = 'red'
+                    else:
+                        self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('k must be an odd integer')
+                    #self.message_back_color = 'red'
+
+            elif self.apply_effect.get() == "Sharpen effect":
+                self.img = effectSharpen(self.img)
+                self.message.set(self.apply_effect.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.apply_effect.get() == "Sepia effect":
+                self.img = effectSepia(self.img)
+                self.message.set(self.apply_effect.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.apply_effect.get() == "Emboss effect":
+                self.img = effectEmboss(self.img)
+                self.message.set(self.apply_effect.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.apply_effect.get() == "Edge effect":
+                try:
+                    self.k_value = float(self.k.get())
+
+                    if self.k_value >= K_EDGE_MIN and self.k_value <= K_EDGE_MAX:
+                        self.img = effectEdge(self.img, self.k_value)
+                        self.message.set(self.apply_effect.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(K_EDGE_MIN) + ' <= k <= ' + str(K_EDGE_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('k must be a real number')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('k must be a real number')
+                    #self.message_back_color = 'red'
+
+            elif self.apply_effect.get() == "Pixel effect":
+                try:
+                    self.k_value = int(self.k.get())
+                    self.K_MIN = 1
+                    self.K_MAX = int(max([self.img.shape[1], self.img.shape[0]]))
+
+                    if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX:
+                        self.img = effectPixel(self.img, self.k_value)
+                        self.message.set(self.apply_effect.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('k must be an integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('k must be an integer')
+                    #self.message_back_color = 'red'
 
 window = Tk()
 Window(window)

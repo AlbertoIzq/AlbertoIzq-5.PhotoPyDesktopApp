@@ -90,9 +90,9 @@ def effectBlur(img, k):
     return cv2.GaussianBlur(img, ksize=(k, k), sigmaY = 0, sigmaX = 0) #cv2.blur(img, (k, k))
 
 def effectPencilSketch(img, k):
-    img_gray = changeToGray(img)
+    img_gray = effectGray(img)
     img_gray_inv = invertAll(img_gray)
-    img_blur = blurGaussian(img_gray_inv, k)
+    img_blur = effectBlur(img_gray_inv, k)
     return dodgeV2(img_gray, img_blur) # Blend both images
 
 def effectCharcoal(img, k):
