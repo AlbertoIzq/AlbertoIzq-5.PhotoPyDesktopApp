@@ -390,7 +390,21 @@ class Window(object):
                 #self.message_back_color = 'green'
 
     def extract_color_command(self):
-        pass
+        if self.img is not None:
+            if self.extract_color.get() == "Blue":
+                self.img = extractBlueChannel(self.img)
+                self.message.set('Extract ' + self.extract_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.extract_color.get() == "Green":
+                self.img = extractGreenChannel(self.img)
+                self.message.set('Extract ' + self.extract_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.extract_color.get() == "Red":
+                self.img = extractRedChannel(self.img)
+                self.message.set('Extract ' + self.extract_color.get() + ' done!')
+                #self.message_back_color = 'green'
 
     def invert_color_command(self):
         pass
