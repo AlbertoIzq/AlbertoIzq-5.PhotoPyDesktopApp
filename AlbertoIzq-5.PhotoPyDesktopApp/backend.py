@@ -1,7 +1,5 @@
 import cv2, numpy
 
-img = cv2.imread('Demon mask.jpg', cv2.IMREAD_UNCHANGED)
-
 # Orientation
 def rotateRight(img):
     return cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
@@ -140,11 +138,14 @@ def dodgeV2(image, mask):
 def burnV2(image, mask):
   return 255 - cv2.divide(255-image, 255-mask, scale=256)
 
-
+'''
+img = cv2.imread('Demon mask.jpg', cv2.IMREAD_UNCHANGED)
 img = resizeRatioPercent(img, 25)
+print(img.shape)
 
 modified_img = effectCharcoal(img, 31)
 
 cv2.imshow("Image", modified_img)
 cv2.waitKey(0)
 cv2.destroyAllWindows() # Method to close the window
+'''

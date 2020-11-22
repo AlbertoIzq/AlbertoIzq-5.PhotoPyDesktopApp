@@ -80,6 +80,12 @@ BUTTON_NAMES_len = getListMaxLen(BUTTON_NAMES)
 entry_files_len = 60
 entry_parameters_len = 6
 
+# Function limit values
+PERCENTAGE_MIN = 1.0
+PERCENTAGE_MAX = 1000.0
+WIDTH_MULTIPLIER = 10
+HEIGHT_MULTIPLIER = 10
+
 class Window(object):
     """Class to store window object"""
 
@@ -223,35 +229,148 @@ class Window(object):
         self.img = cv2.imread(os.path.join(self.input_path.get(), self.input_file_name.get()), cv2.IMREAD_UNCHANGED)
         if self.img is not None:
             self.message.set('Image loaded correctly!')
-            self.message_back_color = 'green'
+            #self.message_back_color = 'green'
         else:
             self.message.set('Image could not be loaded. Check path and file name (with extension)')
-            self.message_back_color = 'red'
+            #self.message_back_color = 'red'
 
     def save_command(self):
         if self.img is not None:
             try:
                 cv2.imwrite(os.path.join(self.output_path.get(), self.output_file_name.get()), self.img)
                 self.message.set('Image saved successfully!')
-                self.message_back_color = 'green'
+                #self.message_back_color = 'green'
             except:
                 self.message.set('Image could not be saved. Check path and file name (with extension)')
-                self.message_back_color = 'red'
-               
+                #self.message_back_color = 'red'
+    
+    def show_image(self):
+        '''
+        HEIGHT_PREV_MAX = 640
+        WIDTH_PREV_MAX = 480
+
+        if self.img.shape[0] > HEIGHT_PREV_MAX:
+           self.height_prev = HEIGHT_PREV_MAX
+           self.width_prev = int(HEIGHT_PREV_MAX * self.img.shape[1] / self.img.shape[0])
+        if self.img.shape[1] > WIDTH_PREV_MAX:
+           self.width_prev = WIDTH_PREV_MAX
+           self.width_prev = int(WIDTH_PREV_MAX * self.img.shape[0] / self.img.shape[1])
+
+        self.img_prev = resizeWidthHeight(img, self.width_prev, self.height_prev)
+        '''
+        cv2.imshow("Modified image", self.img)
+        cv2.waitKey(2000)
+        cv2.destroyAllWindows() # Method to close the window
+
     def change_orientation_command(self):
         if self.img is not None:
             if self.change_orientation.get() == "Rotate left":
                 self.img = rotateLeft(self.img)
+                #self.show_image()
+                self.message.set(self.change_orientation.get() + ' done!')
+                #self.message_back_color = 'green'
+
             elif self.change_orientation.get() == "Rotate right":
                 self.img = rotateRight(self.img)
+                #self.show_image()
+                self.message.set(self.change_orientation.get() + ' done!')
+                #self.message_back_color = 'green'
+
             elif self.change_orientation.get() == "Flip vertical":
                 self.img = flipVertical(self.img)
+                #self.show_image()
+                self.message.set(self.change_orientation.get() + ' done!')
+                #self.message_back_color = 'green'
+
             elif self.change_orientation.get() == "Flip horizontal":
                 self.img = flipHorizontal(self.img)
+                #self.show_image()
+                self.message.set(self.change_orientation.get() + ' done!')
+                #self.message_back_color = 'green'
 
 
     def resize_image_orientation_command(self):
-        pass
+        if self.img is not None:
+            if self.resize_image.get() == "Ratio percent":
+                try:
+                    self.percentage_value = float(self.percentage.get())
+                    if self.percentage_value >= PERCENTAGE_MIN and self.percentage_value <= PERCENTAGE_MAX:
+                        self.img = resizeRatioPercent(self.img, self.percentage_value)
+                        self.message.set(self.resize_image.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(PERCENTAGE_MIN) + ' <= Percentage <= ' + str(PERCENTAGE_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('Percentage must be a real number')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('Percentage must be a real number')
+                    #self.message_back_color = 'red'
+
+            elif self.resize_image.get() == "Ratio by width":
+                try:
+                    self.width_value = int(self.width.get())
+                    self.WIDTH_MIN = 1
+                    self.WIDTH_MAX = self.img.shape[1] * WIDTH_MULTIPLIER
+
+                    if self.width_value >= self.WIDTH_MIN and self.width_value <= self.WIDTH_MAX:
+                        self.img = resizeRatioWidth(self.img, self.width_value)
+                        self.message.set(self.resize_image.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(self.WIDTH_MIN) + ' <= Width <= ' + str(self.WIDTH_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('Width must be an integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('Width must be an integer')
+                    #self.message_back_color = 'red'
+
+            elif self.resize_image.get() == "Ratio by height":
+                try:
+                    self.height_value = int(self.height.get())
+                    self.HEIGHT_MIN = 1
+                    self.HEIGHT_MAX = self.img.shape[1] * HEIGHT_MULTIPLIER
+
+                    if self.height_value >= self.HEIGHT_MIN and self.height_value <= self.HEIGHT_MAX:
+                        self.img = resizeRatioHeight(self.img, self.height_value)
+                        self.message.set(self.resize_image.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(self.HEIGHT_MIN) + ' <= Height <= ' + str(self.HEIGHT_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('Height must be an integer')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('Height must be an integer')
+                    #self.message_back_color = 'red'
+
+            elif self.resize_image.get() == "Width & height":
+                try:
+                    self.width_value = int(self.width.get())
+                    self.height_value = int(self.height.get())
+                    self.WIDTH_MIN = 1
+                    self.WIDTH_MAX = self.img.shape[1] * WIDTH_MULTIPLIER
+                    self.HEIGHT_MIN = 1
+                    self.HEIGHT_MAX = self.img.shape[1] * HEIGHT_MULTIPLIER
+
+                    if self.width_value >= self.WIDTH_MIN and self.width_value <= self.WIDTH_MAX and self.height_value >= self.HEIGHT_MIN and self.height_value <= self.HEIGHT_MAX:
+                        self.img = resizeWidthHeight(self.img, self.width_value, self.height_value)
+                        self.message.set(self.resize_image.get() + ' done!')
+                        #self.message_back_color = 'green'
+                    else:
+                        self.message.set(str(self.WIDTH_MIN) + ' <= Width <= ' + str(self.WIDTH_MAX) + '. ' +
+                                         str(self.HEIGHT_MIN) + ' <= Height <= ' + str(self.HEIGHT_MAX))
+                    #self.message_back_color = 'red'
+                except ValueError:
+                    self.message.set('Wdith and height must be integers')
+                    #self.message_back_color = 'red'
+                if self.percentage is None:
+                    self.message.set('Wdith and height must be integers')
+                    #self.message_back_color = 'red'
 
     def remove_color_command(self):
         pass
