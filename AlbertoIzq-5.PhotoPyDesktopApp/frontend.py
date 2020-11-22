@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.ttk import * # To create custom styles for widgets. Just by importing this, Tkinter applies a custom style
 from backend import *
 import cv2, numpy, os
 
@@ -10,6 +11,7 @@ def getListMaxLen(lst):
     return ln
 
 CHANGE_ORIENTATION = [
+ "", # OptionMenu needs to have first option in blank. If not, the first option vanishes
 "Rotate left",
 "Rotate right",
 "Flip vertical",
@@ -18,6 +20,7 @@ CHANGE_ORIENTATION = [
 CHANGE_ORIENTATION_len = getListMaxLen(CHANGE_ORIENTATION)
 
 RESIZE_IMAGE = [
+ "",
 "Ratio percent",
 "Ratio by width",
 "Ratio by height",
@@ -26,6 +29,7 @@ RESIZE_IMAGE = [
 RESIZE_IMAGE_len = getListMaxLen(RESIZE_IMAGE)
 
 REMOVE_COLOR = [
+ "",
 "Blue",
 "Green",
 "Red"
@@ -33,6 +37,7 @@ REMOVE_COLOR = [
 REMOVE_COLOR_len = getListMaxLen(REMOVE_COLOR)
 
 EXTRACT_COLOR = [
+ "",
 "Blue",
 "Green",
 "Red"
@@ -40,6 +45,7 @@ EXTRACT_COLOR = [
 EXTRACT_COLOR_len = getListMaxLen(EXTRACT_COLOR)
 
 INVERT_COLOR = [
+ "",
 "All",
 "Blue",
 "Green",
@@ -48,6 +54,7 @@ INVERT_COLOR = [
 INVERT_COLOR_len = getListMaxLen(INVERT_COLOR)
 
 APPLY_EFFECT = [
+ "",
 "Gray effect",
 "Blur effect",
 "Pencil sketch effect",
@@ -96,7 +103,7 @@ class Window(object):
     def __init__(self, window):
         self.window = window
         self.window.title("PhotoPy by Alberto Izquierdo")
-
+        
         # INPUT FILE
         l1 = Label(window, text = "INPUT FILE")
         l1.grid(row = 0, column = 0, columnspan = 2)
@@ -141,9 +148,15 @@ class Window(object):
 
         # MESSAGE
         self.message = StringVar()
-        self.message_back_color = None
-        l7 = Label(window, textvariable = self.message, background = self.message_back_color)
-        l7.grid(row = 6, column = 0, columnspan = 2)
+        style = Style()
+        style.configure("Mine.TLabel", background= None)
+        style.configure("MineRed.TLabel", background= "tomato2")
+        style.configure("MineOrange.TLabel", background= "tan1")
+        style.configure("MineGreen.TLabel", background= "pale green")
+
+        #self.message_back_color = None
+        self.l7 = Label(window, textvariable = self.message, style = "Mine.TLabel")
+        self.l7.grid(row = 6, column = 0, columnspan = 2)
 
         # EDIT IMAGE
         l8 = Label(window, text = "EFFECTS")
@@ -232,21 +245,21 @@ class Window(object):
     def load_command(self):
         self.img = cv2.imread(os.path.join(self.input_path.get(), self.input_file_name.get()), cv2.IMREAD_UNCHANGED)
         if self.img is not None:
+            self.l7.configure(style = "MineGreen.TLabel")
             self.message.set('Image loaded correctly!')
-            #self.message_back_color = 'green'
         else:
+            self.l7.configure(style = "MineRed.TLabel")
             self.message.set('Image could not be loaded. Check path and file name (with extension)')
-            #self.message_back_color = 'red'
 
     def save_command(self):
         if self.img is not None:
             try:
                 cv2.imwrite(os.path.join(self.output_path.get(), self.output_file_name.get()), self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Image saved successfully!')
-                #self.message_back_color = 'green'
             except:
+                self.l7.configure(style = "MineRed.TLabel")
                 self.message.set('Image could not be saved. Check path and file name (with extension)')
-                #self.message_back_color = 'red'
     
     def show_image(self):
         '''
@@ -271,26 +284,26 @@ class Window(object):
             if self.change_orientation.get() == "Rotate left":
                 self.img = rotateLeft(self.img)
                 #self.show_image()
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.change_orientation.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.change_orientation.get() == "Rotate right":
                 self.img = rotateRight(self.img)
                 #self.show_image()
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.change_orientation.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.change_orientation.get() == "Flip vertical":
                 self.img = flipVertical(self.img)
                 #self.show_image()
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.change_orientation.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.change_orientation.get() == "Flip horizontal":
                 self.img = flipHorizontal(self.img)
                 #self.show_image()
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.change_orientation.get() + ' done!')
-                #self.message_back_color = 'green'
 
 
     def resize_image_orientation_command(self):
@@ -300,37 +313,36 @@ class Window(object):
                     self.percentage_value = float(self.percentage.get())
                     if self.percentage_value >= PERCENTAGE_MIN and self.percentage_value <= PERCENTAGE_MAX:
                         self.img = resizeRatioPercent(self.img, self.percentage_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.resize_image.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(PERCENTAGE_MIN) + ' <= Percentage <= ' + str(PERCENTAGE_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Percentage must be a real number')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Percentage must be a real number')
-                    #self.message_back_color = 'red'
 
             elif self.resize_image.get() == "Ratio by width":
                 try:
                     self.width_value = int(self.width.get())
                     self.WIDTH_MIN = 1
                     self.WIDTH_MAX = self.img.shape[1] * WIDTH_MULTIPLIER
-
                     if self.width_value >= self.WIDTH_MIN and self.width_value <= self.WIDTH_MAX:
                         self.img = resizeRatioWidth(self.img, self.width_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.resize_image.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.WIDTH_MIN) + ' <= Width <= ' + str(self.WIDTH_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Width must be an integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Width must be an integer')
-                    #self.message_back_color = 'red'
 
             elif self.resize_image.get() == "Ratio by height":
                 try:
@@ -340,108 +352,108 @@ class Window(object):
 
                     if self.height_value >= self.HEIGHT_MIN and self.height_value <= self.HEIGHT_MAX:
                         self.img = resizeRatioHeight(self.img, self.height_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.resize_image.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.HEIGHT_MIN) + ' <= Height <= ' + str(self.HEIGHT_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Height must be an integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Height must be an integer')
-                    #self.message_back_color = 'red'
 
             elif self.resize_image.get() == "Width & height":
                 try:
                     self.width_value = int(self.width.get())
                     self.height_value = int(self.height.get())
                     self.WIDTH_MIN = 1
-                    self.WIDTH_MAX = self.img.shape[1] * WIDTH_MULTIPLIER
+                    self.WIDTH_MAX = self.img.shape[0] * WIDTH_MULTIPLIER
                     self.HEIGHT_MIN = 1
                     self.HEIGHT_MAX = self.img.shape[1] * HEIGHT_MULTIPLIER
 
                     if self.width_value >= self.WIDTH_MIN and self.width_value <= self.WIDTH_MAX and self.height_value >= self.HEIGHT_MIN and self.height_value <= self.HEIGHT_MAX:
                         self.img = resizeWidthHeight(self.img, self.width_value, self.height_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.resize_image.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.WIDTH_MIN) + ' <= Width <= ' + str(self.WIDTH_MAX) + '. ' +
                                          str(self.HEIGHT_MIN) + ' <= Height <= ' + str(self.HEIGHT_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Wdith and height must be integers')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('Wdith and height must be integers')
-                    #self.message_back_color = 'red'
 
     def remove_color_command(self):
         if self.img is not None:
             if self.remove_color.get() == "Blue":
                 self.img = removeBlueChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Remove ' + self.remove_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.remove_color.get() == "Green":
                 self.img = removeGreenChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Remove ' + self.remove_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.remove_color.get() == "Red":
                 self.img = removeRedChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Remove ' + self.remove_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
     def extract_color_command(self):
         if self.img is not None:
             if self.extract_color.get() == "Blue":
                 self.img = extractBlueChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Extract ' + self.extract_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.extract_color.get() == "Green":
                 self.img = extractGreenChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Extract ' + self.extract_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.extract_color.get() == "Red":
                 self.img = extractRedChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Extract ' + self.extract_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
     def invert_color_command(self):
         if self.img is not None:
             if self.invert_color.get() == "All":
                 self.img = invertAll(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Invert ' + self.invert_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.invert_color.get() == "Blue":
                 self.img = invertBlueChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Invert ' + self.invert_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.invert_color.get() == "Green":
                 self.img = invertGreenChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Invert ' + self.invert_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.invert_color.get() == "Red":
                 self.img = invertRedChannel(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set('Invert ' + self.invert_color.get() + ' done!')
-                #self.message_back_color = 'green'
 
     def apply_effect_command(self):
         if self.img is not None:
             if self.apply_effect.get() == "Gray effect":
                 if len(self.img.shape) > 2: # You can only apply gray effect once because when it's applied, you only have one channel
                     self.img = effectGray(self.img)
+                    self.l7.configure(style = "MineGreen.TLabel")
                     self.message.set(self.apply_effect.get() + ' done!')
-                    #self.message_back_color = 'green'
                 else:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set(self.apply_effect.get() + ' cannot be applied')
-                    #self.message_back_color = 'red'
 
             elif self.apply_effect.get() == "Blur effect":
                 try:
@@ -451,17 +463,17 @@ class Window(object):
 
                     if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
                         self.img = effectBlur(self.img, self.k_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.apply_effect.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
 
             elif self.apply_effect.get() == "Pencil sketch effect":
                 try:
@@ -472,20 +484,20 @@ class Window(object):
                     if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
                         if len(self.img.shape) > 2: # You can only apply gray effect once
                             self.img = effectPencilSketch(self.img, self.k_value)
+                            self.l7.configure(style = "MineGreen.TLabel")
                             self.message.set(self.apply_effect.get() + ' done!')
-                            #self.message_back_color = 'green'
                         else:
+                            self.l7.configure(style = "MineRed.TLabel")
                             self.message.set(self.apply_effect.get() + ' cannot be applied')
-                            #self.message_back_color = 'red'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
 
             elif self.apply_effect.get() == "Charcoal effect":
                 try:
@@ -496,35 +508,35 @@ class Window(object):
                     if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX and self.k_value % 2 == 1:
                         if len(self.img.shape) > 2: # You can only apply gray effect once
                             self.img = effectCharcoal(self.img, self.k_value)
+                            self.l7.configure(style = "MineGreen.TLabel")
                             self.message.set(self.apply_effect.get() + ' done!')
-                            #self.message_back_color = 'green'
                         else:
+                            self.l7.configure(style = "MineRed.TLabel")
                             self.message.set(self.apply_effect.get() + ' cannot be applied')
-                            #self.message_back_color = 'red'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX) + ' and odd')
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an odd integer')
-                    #self.message_back_color = 'red'
 
             elif self.apply_effect.get() == "Sharpen effect":
                 self.img = effectSharpen(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.apply_effect.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.apply_effect.get() == "Sepia effect":
                 self.img = effectSepia(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.apply_effect.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.apply_effect.get() == "Emboss effect":
                 self.img = effectEmboss(self.img)
+                self.l7.configure(style = "MineGreen.TLabel")
                 self.message.set(self.apply_effect.get() + ' done!')
-                #self.message_back_color = 'green'
 
             elif self.apply_effect.get() == "Edge effect":
                 try:
@@ -532,17 +544,17 @@ class Window(object):
 
                     if self.k_value >= K_EDGE_MIN and self.k_value <= K_EDGE_MAX:
                         self.img = effectEdge(self.img, self.k_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.apply_effect.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(K_EDGE_MIN) + ' <= k <= ' + str(K_EDGE_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be a real number')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be a real number')
-                    #self.message_back_color = 'red'
 
             elif self.apply_effect.get() == "Pixel effect":
                 try:
@@ -552,17 +564,17 @@ class Window(object):
 
                     if self.k_value >= self.K_MIN and self.k_value <= self.K_MAX:
                         self.img = effectPixel(self.img, self.k_value)
+                        self.l7.configure(style = "MineGreen.TLabel")
                         self.message.set(self.apply_effect.get() + ' done!')
-                        #self.message_back_color = 'green'
                     else:
+                        self.l7.configure(style = "MineOrange.TLabel")
                         self.message.set(str(self.K_MIN) + ' <= k <= ' + str(self.K_MAX))
-                    #self.message_back_color = 'red'
                 except ValueError:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an integer')
-                    #self.message_back_color = 'red'
                 if self.percentage is None:
+                    self.l7.configure(style = "MineRed.TLabel")
                     self.message.set('k must be an integer')
-                    #self.message_back_color = 'red'
 
 window = Tk()
 Window(window)
