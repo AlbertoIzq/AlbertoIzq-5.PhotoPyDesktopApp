@@ -407,7 +407,26 @@ class Window(object):
                 #self.message_back_color = 'green'
 
     def invert_color_command(self):
-        pass
+        if self.img is not None:
+            if self.invert_color.get() == "All":
+                self.img = invertAll(self.img)
+                self.message.set('Invert ' + self.invert_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.invert_color.get() == "Blue":
+                self.img = invertBlueChannel(self.img)
+                self.message.set('Invert ' + self.invert_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.invert_color.get() == "Green":
+                self.img = invertGreenChannel(self.img)
+                self.message.set('Invert ' + self.invert_color.get() + ' done!')
+                #self.message_back_color = 'green'
+
+            elif self.invert_color.get() == "Red":
+                self.img = invertRedChannel(self.img)
+                self.message.set('Invert ' + self.invert_color.get() + ' done!')
+                #self.message_back_color = 'green'
 
     def apply_effect_command(self):
         pass
