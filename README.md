@@ -11,7 +11,7 @@ Available options are:
   - Flip vertical
   - Flip horizontal
   
--Resize image
+- Resize image
   - Keeping ratio with percentage
   - Keeping ratio with width
   - Keeping ratio with height
